@@ -21,6 +21,7 @@
   transition: transform 0.25s ease, opacity 0.2s ease;
 }
 
+
 .home-header.hidden {
   transform: translateY(-100%);
   opacity: 0;
@@ -50,6 +51,33 @@
   align-items: center;
   justify-content: center;
 }
+
+
+.search-input {
+  width: 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 20px;
+  border: 0;
+   color: rgb(0, 0, 0);
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.search-input.open {
+  width: 50%;
+  opacity: 1;
+  transform: scaleX(1);
+  padding: 10px 15px;
+}
+
+.search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 1);
+}
+
 
 .search-btn:hover {
   background: rgba(255, 255, 255, 0.2);
@@ -157,5 +185,7 @@
     font-size: 16px;
   }
 
+  
   /* Scroll-to-top button removed */
 }
+

@@ -6,6 +6,7 @@ import { useInfiniteScrollContainer } from '../hooks/useInfiniteScroll';
 import { Post } from '../types';
 import './Home.css';
 import { UIContext } from '../contexts/UIContext';
+import SearchModal from '../components/SearchModal';
 
 const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>(() => generatePosts(0, 10));
@@ -70,19 +71,115 @@ const Home: React.FC = () => {
     };
   }, [ui, reloadTop]);
 
+
+
+
+
+
+
+
+  //методы, отвечающие за SEARCH
+
+
+
+  //обозначение переменных (думаю тут удобнее)
+  const [activeSearchTab, setActiveSearchTab] = useState("users");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+
+  //фокус при нажатии на кнопку поиска
+  useEffect(() => {
+    if (searchOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [searchOpen]);
+
+
+  //тогл открытие - закрытие
+  function SearchHandle() {
+    if (searchOpen===true) {setShowModal(false);}
+    else {setShowModal(true)}
+    setSearchOpen(prev => !prev);
+  }
+
+
+  //реактивная смена инпута и отправка данных
+  function onChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+
+    const newValue = e.target.value;
+    setSearchValue(newValue);
+      
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+      
+    //отправка данных по истечению секунды
+    timeoutRef.current = setTimeout(() => {
+      if (newValue !== "") {
+      const searchApi = { query: newValue, type: activeSearchTab };
+      console.log(searchApi);
+      }
+    }, 1000);
+  }
+
+  //очистка таймера
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+
+  //конец методов SEARCH
+
+
+
+
+
+  
+//ретюрн
+
   return (
     <div className="home-page">
+
+
       <header className={`home-header ${headerHidden ? 'hidden' : ''}`}>
+
         <h1 className="app-title" onClick={reloadTop} role="button" aria-label="Go to top and refresh">Share</h1>
+        
+        <input
+          ref={inputRef}
+          className={`search-input ${searchOpen ? "open" : ""}`}
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {onChangeHandler(e)}}
+        />
+
         <div className="header-actions">
-          <button className="search-btn" aria-label="Search">
+
+          <button className="search-btn" aria-label="Search" onClick={SearchHandle}>
             <Search size={18} />
-          </button>
+          </button> 
+
           <button className="profile-btn" aria-label="Profile" onClick={() => (window.location.href = '/profile')}>
             <User size={18} />
           </button>
+
         </div>
+
       </header>
+
+      {showModal ? (<SearchModal value={searchValue} activeSearchTab={activeSearchTab} setActiveSearchTab={setActiveSearchTab}/>) : (null) }
+    
+        
+
+
       <div className="posts-container" ref={postsRef} onScroll={onPostsScroll}>
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />

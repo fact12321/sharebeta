@@ -16,7 +16,7 @@ import { mockUser } from '../data/mockData';
 import './Profile.css';
 
 const Profile: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
+  const [activeProfileTab, setActiveProfileTab] = useState<'posts' | 'settings'>('posts');
 
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
@@ -75,15 +75,15 @@ const Profile: React.FC = () => {
 
         <div className="profile-tabs">
           <button 
-            className={`tab-btn ${activeTab === 'posts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('posts')}
+            className={`tab-btn ${activeProfileTab === 'posts' ? 'active' : ''}`}
+            onClick={() => setActiveProfileTab('posts')}
             aria-label="Posts"
           >
             <FileText size={18} />
           </button>
           <button 
-            className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
+            className={`tab-btn ${activeProfileTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveProfileTab('settings')}
             aria-label="Settings"
           >
             <Settings size={18} />
@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
         </div>
 
         <div className="tab-content">
-          {activeTab === 'posts' && (
+          {activeProfileTab === 'posts' && (
             <div className="posts-tab glass">
               <div className="empty-state">
                 <FileText className="empty-icon" size={48} />
@@ -102,7 +102,7 @@ const Profile: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'settings' && (
+          {activeProfileTab === 'settings' && (
             <div className="settings-tab">
               <div className="settings-section glass">
                 <h3 className="section-title">Account</h3>
